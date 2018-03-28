@@ -396,7 +396,7 @@ namespace KeyboardLighter
                         byte[] ledSettingData = new byte[65];
                         GenerateLedSettingPacket(respiration, seconds).CopyTo(ledSettingData, 1);
                         ledSettingData[0] = 0;
-                        devices_257[devidx].WriteFeatureData(ledSettingData);
+                        devices_6[devidx].WriteFeatureData(ledSettingData);
                         Thread.Sleep(20);
 
                         devices_6[devidx].WriteFeatureData(StringToByteArray("013B117D9949B557"));
@@ -404,7 +404,7 @@ namespace KeyboardLighter
                         byte[] colorData = new byte[65];
                         GenerateColourPacket(r, g, b).CopyTo(colorData, 1);
                         colorData[0] = 0;
-                        devices_257[devidx].WriteFeatureData(colorData);
+                        devices_6[devidx].WriteFeatureData(colorData);
                         Thread.Sleep(20);
                     }
                 }
