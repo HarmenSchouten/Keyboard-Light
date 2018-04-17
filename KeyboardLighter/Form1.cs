@@ -19,7 +19,7 @@ namespace KeyboardLighter
         public Form1()
         {
             InitializeComponent();
-            KeyboardLedManager.Instance.checkNewDevices();
+            KeyboardLedManager.Instance.Start();
         }
 
         private void orange_Click(object sender, EventArgs e)

@@ -24,12 +24,13 @@ namespace KeyboardLighter
         public static KeyboardLedManager instance;
         public KeyboardLedManager()
         {
-            ledTimer.Elapsed += (sender, e) => { ledRecentlyChanged = false; };
-            mouseUpdateTimer.Elapsed += (sender, e) =>
-            {
+            Thread checkNewDevicesThread = new Thread(() => checkNewDevices());
+            checkNewDevicesThread.IsBackground = true;
+            checkNewDevicesThread.Start();
+        }
 
-            };
-
+        public void Start()
+        {
             Thread checkNewDevicesThread = new Thread(() => checkNewDevices());
             checkNewDevicesThread.IsBackground = true;
             checkNewDevicesThread.Start();
@@ -380,11 +381,11 @@ namespace KeyboardLighter
                 if (devices_6.Count == 0)
                 {
                     settingColour = false;
-                    Console.WriteLine("Check");
                     currentMode = mode;
                     return;
                 }
                 Console.WriteLine(devices_6.Count);
+
                 for (int devidx = 0; devidx < devices_6.Count; devidx++)
                 {
                     for (int i = 0; i < 2; i++)
