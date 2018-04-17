@@ -25,19 +25,19 @@ namespace KeyboardLighter
         private void orange_Click(object sender, EventArgs e)
         {
             label1.BackColor = Color.Orange;
-            KeyboardLedManager.Instance.updateMouseIndicator(Program.indicatorModes.ORANGE_ON);
+            KeyboardLedManager.Instance.updateIndicator(Program.indicatorModes.ORANGE_ON);
         }
 
         private void red_Click(object sender, EventArgs e)
         {
             label1.BackColor = Color.Red;
-            KeyboardLedManager.Instance.updateMouseIndicator(Program.indicatorModes.RED_ON);
+            KeyboardLedManager.Instance.updateIndicator(Program.indicatorModes.RED_ON);
         }
 
         private void green_Click(object sender, EventArgs e)
         {
             label1.BackColor = Color.Green;
-            KeyboardLedManager.Instance.updateMouseIndicator(Program.indicatorModes.GREEN_ON);
+            KeyboardLedManager.Instance.updateIndicator(Program.indicatorModes.GREEN_ON);
         }
 
     }

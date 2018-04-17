@@ -42,7 +42,6 @@ namespace KeyboardLighter
             {
                 bool newDevice = false;
                 List<HidDevice> devices_6_new = new List<HidDevice>();
-                List<HidDevice> devices_257_new = new List<HidDevice>();
                 List<HidDevice> devices_8_new = new List<HidDevice>();
                 List<HidDevice> devices_65_new = new List<HidDevice>();
 
@@ -50,51 +49,6 @@ namespace KeyboardLighter
                 List<HidDevice> devices_list = devices.ToList<HidDevice>();
                 foreach (HidDevice dev in devices_list)
                 {
-                    Console.WriteLine(dev.Capabilities.FeatureReportByteLength);
-                    if (dev.Capabilities.FeatureReportByteLength == 8)
-                    {
-                        //_device_8 = dev;
-                        devices_8_new.Add(dev);
-                        bool alreadyExists = false;
-
-                        foreach (HidDevice existingDev in devices_8)
-                        {
-                            if (existingDev.DevicePath.Equals(dev.DevicePath))
-                            {
-                                alreadyExists = true;
-                            }
-                        }
-
-                        if (!alreadyExists)
-                        {
-                            newDevice = true;
-                            Console.WriteLine("New device is found");
-                            devices_8.Add(dev);
-                        }
-                    }
-
-                    if (dev.Capabilities.FeatureReportByteLength == 65)
-                    {
-                        //_device_65 = dev;
-                        devices_65_new.Add(dev);
-                        bool alreadyExists = false;
-
-                        foreach (HidDevice existingDev in devices_65)
-                        {
-                            if (existingDev.DevicePath.Equals(dev.DevicePath))
-                            {
-                                alreadyExists = true;
-                            }
-                        }
-
-                        if (!alreadyExists)
-                        {
-                            newDevice = true;
-                            Console.WriteLine("New device is found");
-                            devices_65.Add(dev);
-                        }
-                    }
-
                     if (dev.Capabilities.FeatureReportByteLength == 6)
                     {
                         devices_6_new.Add(dev);
@@ -114,39 +68,20 @@ namespace KeyboardLighter
                             devices_6.Add(dev);
                         }
                     }
-                    if (dev.Capabilities.FeatureReportByteLength == 0)
-                    {
-                        devices_257_new.Add(dev);
-                        bool alreadyExists = false;
-
-                        foreach (HidDevice existingDev in devices_257)
-                        {
-                            if (existingDev.DevicePath.Equals(dev.DevicePath))
-                            {
-                                alreadyExists = true;
-                            }
-                        }
-                        if (alreadyExists == false)
-                        {
-                            newDevice = true;
-                            Console.WriteLine("New device is found");
-                            devices_257.Add(dev);
-                        }
-                    }
                 }
                 if (newDevice == true)
                 {
-                    updateMouseIndicator(Program.indicatorModes.RED_ON);
+                    //updateMouseIndicator(Program.indicatorModes.RED_ON);
+                    readFeatureData();
                 }
                 else
                 {
-                    updateMouseIndicator(Program.indicatorModes.ORANGE_ON);
+                    readFeatureData();
                 }
 
                 devices_6 = devices_6_new;
                 devices_8 = devices_8_new;
                 devices_65 = devices_65_new;
-                devices_257 = devices_257_new;
 
                 Thread.Sleep(1000);
             }
@@ -306,7 +241,7 @@ namespace KeyboardLighter
                              .ToArray();
         }
 
-        public void updateMouseIndicator(Program.indicatorModes mode)
+        public void updateIndicator(Program.indicatorModes mode)
         {
             bool mousePressed = false;
 
@@ -327,21 +262,21 @@ namespace KeyboardLighter
                     case Program.indicatorModes.GREEN_GLOW:
                     case Program.indicatorModes.GREEN_ON:
                     case Program.indicatorModes.GREEN_SLOW:
-                        Console.WriteLine("CASE 1");
+                        //Console.WriteLine("CASE 1");
                         r = Settings.Default.ColorGreenR; g = Settings.Default.ColorGreenG; b = Settings.Default.ColorGreenB;
                         break;
                     case Program.indicatorModes.ORANGE_FAST:
                     case Program.indicatorModes.ORANGE_GLOW:
                     case Program.indicatorModes.ORANGE_ON:
                     case Program.indicatorModes.ORANGE_SLOW:
-                        Console.WriteLine("CASE 2");
+                        //Console.WriteLine("CASE 2");
                         r = Settings.Default.ColorOrangeR; g = Settings.Default.ColorOrangeG; b = Settings.Default.ColorOrangeB;
                         break;
                     case Program.indicatorModes.RED_FAST:
                     case Program.indicatorModes.RED_GLOW:
                     case Program.indicatorModes.RED_ON:
                     case Program.indicatorModes.RED_SLOW:
-                        Console.WriteLine("CASE 3");
+                        //Console.WriteLine("CASE 3");
                         r = Settings.Default.ColorRedR; g = Settings.Default.ColorRedG; b = Settings.Default.ColorRedB;
                         break;
                 }
@@ -351,62 +286,64 @@ namespace KeyboardLighter
                     case Program.indicatorModes.GREEN_ON:
                     case Program.indicatorModes.ORANGE_ON:
                     case Program.indicatorModes.RED_ON:
-                        Console.WriteLine("CASE 4");
+                        //Console.WriteLine("CASE 4");
                         respiration = false;
                         seconds = 4;
                         break;
                     case Program.indicatorModes.GREEN_FAST:
                     case Program.indicatorModes.ORANGE_FAST:
                     case Program.indicatorModes.RED_FAST:
-                        Console.WriteLine("CASE 5");
+                        //Console.WriteLine("CASE 5");
                         respiration = true;
                         seconds = 3;
                         break;
                     case Program.indicatorModes.GREEN_SLOW:
                     case Program.indicatorModes.ORANGE_SLOW:
                     case Program.indicatorModes.RED_SLOW:
-                        Console.WriteLine("CASE 6");
+                        //Console.WriteLine("CASE 6");
                         respiration = true;
                         seconds = 5;
                         break;
                     case Program.indicatorModes.GREEN_GLOW:
                     case Program.indicatorModes.ORANGE_GLOW:
                     case Program.indicatorModes.RED_GLOW:
-                        Console.WriteLine("CASE 8");
+                        //Console.WriteLine("CASE 8");
                         respiration = true;
                         seconds = 8;
                         break;
                 }
-               
+
                 if (devices_6.Count == 0)
                 {
                     settingColour = false;
                     currentMode = mode;
                     return;
                 }
-                Console.WriteLine(devices_6.Count);
+                //Console.WriteLine(devices_6.Count);
 
                 for (int devidx = 0; devidx < devices_6.Count; devidx++)
                 {
                     for (int i = 0; i < 2; i++)
-                    { 
+                    {
                         byte[] _data_8;
 
-                        devices_6[devidx].WriteFeatureData(StringToByteArray("013B117D99493557"));
+                        //devices_6[devidx].WriteFeatureData(StringToByteArray("013B117D99493557"));
                         devices_6[devidx].ReadFeatureData(out _data_8, 1);
-                        byte[] ledSettingData = new byte[65];
-                        GenerateLedSettingPacket(respiration, seconds).CopyTo(ledSettingData, 1);
-                        ledSettingData[0] = 0;
-                        devices_6[devidx].WriteFeatureData(ledSettingData);
-                        Thread.Sleep(20);
+                        //byte[] ledSettingData = new byte[65];
+                        //GenerateLedSettingPacket(respiration, seconds).CopyTo(ledSettingData, 1);
+                        //ledSettingData[0] = 0;
+                        //devices_6[devidx].WriteFeatureData(ledSettingData);
+                        Thread.Sleep(200);
 
-                        devices_6[devidx].WriteFeatureData(StringToByteArray("013B117D9949B557"));
+                        //devices_6[devidx].WriteFeatureData(StringToByteArray("013B117D9949B557"));
                         devices_6[devidx].ReadFeatureData(out _data_8, 1);
-                        byte[] colorData = new byte[65];
-                        GenerateColourPacket(r, g, b).CopyTo(colorData, 1);
-                        colorData[0] = 0;
-                        devices_6[devidx].WriteFeatureData(colorData);
-                        Thread.Sleep(20);
+                        //byte[] colorData = new byte[65];
+                        //GenerateColourPacket(r, g, b).CopyTo(colorData, 1);
+                        //colorData[0] = 0;
+                        //devices_6[devidx].WriteFeatureData(colorData);
+                        Thread.Sleep(200);
+
+                        Console.WriteLine(Encoding.Default.GetString(_data_8));
                     }
                 }
 
